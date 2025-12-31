@@ -1,4 +1,3 @@
-// Force rebuild: Fixed import to use createServerClient instead of createRouteHandlerClient
 import { createServerClient } from '@supabase/auth-helpers-nextjs';
 import { cookies } from 'next/headers';
 import { NextResponse } from 'next/server';
@@ -25,7 +24,6 @@ export async function GET(request: NextRequest) {
                                 cookieStore.set(name, value, options)
                             );
                         } catch (error) {
-                            // usage in middleware/route handler where response is mostly ready
                             console.error('Error setting cookies:', error);
                         }
                     },
@@ -36,7 +34,6 @@ export async function GET(request: NextRequest) {
         const { data: { session }, error } = await supabase.auth.exchangeCodeForSession(code);
 
         if (!error && session?.user) {
-            // Ensure user exists in public.users table (for Google OAuth users)
             console.log(`[AUTH CALLBACK] Syncing user: ${session.user.id}`);
             const { error: syncError } = await supabaseAdmin
                 .from('users')
@@ -54,7 +51,8 @@ export async function GET(request: NextRequest) {
         }
     }
 
-    // URL to redirect to after sign in process completes
+    // Use production base URL for redirect
+    const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:5757';
     const nextPath = requestUrl.searchParams.get('next') || '/dashboard';
-    return NextResponse.redirect(new URL(nextPath, request.url));
+    return NextResponse.redirect(`${baseUrl}${nextPath}`);
 }
