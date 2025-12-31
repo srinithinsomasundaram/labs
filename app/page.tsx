@@ -131,9 +131,7 @@ export default function Home() {
             <div className="hidden md:flex items-center gap-6">
               <a href="#pricing" className="text-zinc-500 hover:text-zinc-900 font-medium transition-colors">Pricing</a>
               <Button variant="ghost" className="text-zinc-500 hover:text-zinc-900 font-medium" onClick={() => router.push('/login')}>Login</Button>
-              <Button onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })} className="bg-zinc-900 text-white hover:bg-zinc-800 rounded-full px-6">
-                Start Free Audit
-              </Button>
+           
             </div>
           </div>
         </div>
